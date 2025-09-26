@@ -3,23 +3,24 @@ package com.EAD.autoservice_backend.controller;
 import com.EAD.autoservice_backend.dto.RegisterRequest;
 import com.EAD.autoservice_backend.dto.RegisterResponse;
 import com.EAD.autoservice_backend.exception.UserAlreadyExistsException;
-import com.EAD.autoservice_backend.model.User;
+import com.EAD.autoservice_backend.dto.LoginRequest;
+import com.EAD.autoservice_backend.dto.LoginResponse;
 import com.EAD.autoservice_backend.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * REST Controller for Authentication operations
- * Handles HTTP requests from React frontend for user registration and login
  */
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3001"})
 public class AuthController {
 
     private final AuthService authService;
@@ -31,8 +32,6 @@ public class AuthController {
 
     /**
      * User Registration Endpoint
-     * POST /api/auth/register
-     * NO JWT TOKEN RETURNED - user must login after registration
      */
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
@@ -49,5 +48,14 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
-}
 
+    /**
+     * User Login Endpoint
+     */
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        LoginResponse response = authService.loginUser(request);
+        return ResponseEntity.ok(response);
+    }
+
+}

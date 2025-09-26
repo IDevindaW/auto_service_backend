@@ -1,5 +1,7 @@
 package com.EAD.autoservice_backend.dto;
 
+import com.EAD.autoservice_backend.model.Role;
+
 /**
  * DTO for login response sent to React frontend
  * Contains JWT token and user information
@@ -19,6 +21,9 @@ public class LoginResponse {
         this.username = username;
         this.email = email;
         this.role = role;
+    }
+
+    public LoginResponse(String token, String username, String email, Role role) {
     }
 
     // Getters and Setters
