@@ -47,7 +47,6 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // UserDetails implementation - Spring Security methods
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(() -> "ROLE_" + role.name());
@@ -65,7 +64,6 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() { return true; }
 
-    // Standard getters and setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
