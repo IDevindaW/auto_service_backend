@@ -23,6 +23,7 @@ public class LoginResponse {
     }
 
     public LoginResponse(String token, String username, String email, Role role) {
+        this(token, username, email, role != null ? role.name() : null);// Fixed: Delegate to string constructor, convert enum to string
     }
 
     public String getToken() { return token; }

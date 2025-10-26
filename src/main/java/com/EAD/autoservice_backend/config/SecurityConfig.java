@@ -1,6 +1,8 @@
 package com.EAD.autoservice_backend.config;
 
-import com.EAD.autoservice_backend.service.CustomUserDetailsService;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import java.util.Arrays;
-import java.util.List;
+
+import com.EAD.autoservice_backend.service.CustomUserDetailsService;
 
 /**
  * Security Configuration for JWT Authentication
@@ -96,8 +98,11 @@ public class SecurityConfig {
 
                 // Allow only registration endpoint without authentication
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register").permitAll()  // public registration
-                        .anyRequest().permitAll()
+                       // .requestMatchers("/api/auth/register").permitAll()  // public registration
+                       .requestMatchers("/api/auth/**").permitAll()  // Public: register + login
+                       .requestMatchers("/api/admin/**").hasRole("ADMIN")  // Protected: Admin only
+                       .anyRequest().authenticated()  // Secure everything else (add user routes later)
+                        //.anyRequest().permitAll()
                 )
 
 
@@ -106,10 +111,10 @@ public class SecurityConfig {
 
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);  // Add this line (ensures JWT filter runs)
 
         return http.build();
     }
-
-
+    
 }
